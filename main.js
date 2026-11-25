@@ -210,3 +210,19 @@ if (heroImg && !reduce) {
     }
   }, 6500);
 })();
+
+// Giriş yazıları: aşağı kaydırınca hafifçe yukarı kayıp solarak çıkar
+(() => {
+  const ht = document.querySelector(".hero-text");
+  if (!ht || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let tick = false;
+  const upd = () => {
+    const k = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * .75)));
+    const e = k * k * (3 - 2 * k);
+    ht.style.transform = k ? `translate3d(0, ${(-e * 70).toFixed(1)}px, 0)` : "";
+    ht.style.opacity = k ? (1 - e * .95).toFixed(3) : "";
+    tick = false;
+  };
+  window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
+  upd();
+})();
