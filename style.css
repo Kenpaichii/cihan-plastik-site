@@ -581,6 +581,25 @@ body.modal-open { overflow: hidden; }
   .products .card:hover h3 { animation: none; }
 }
 
+/* Kemer çerçeve: logodaki kemerli kapıdan; isim alt çizginin boşluğunda */
+.products .card .arch {
+  position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 4 / 5; height: auto; z-index: 2; pointer-events: none;
+  fill: none; stroke: rgba(216,185,140,.7); stroke-width: 1; stroke-dasharray: 100; stroke-dashoffset: 100;
+  transition: stroke-dashoffset 2.2s cubic-bezier(.45,.05,.2,1) .2s, stroke .6s ease;
+}
+.products .card .arch path { stroke-width: .55; }
+.products .card.in .arch { stroke-dashoffset: 0; }
+.products .card:hover .arch { stroke: var(--gold); }
+.products .card .card-body { inset: 0; padding: 0; z-index: 3; border-radius: var(--radius);
+  background: linear-gradient(to top, rgba(10,8,7,.75), rgba(10,8,7,0) 42%); }
+.products .card h3 {
+  position: absolute; left: 0; right: 0; bottom: calc(4% - .4rem); text-align: center; padding: 0; line-height: 1;
+  font-size: .76rem; font-weight: 500; text-transform: uppercase; letter-spacing: .3em; white-space: nowrap;
+}
+.products .card.in h3 { letter-spacing: .2em; }
+.products .card h3::before { display: none; }
+@media (prefers-reduced-motion: reduce) { .products .card .arch { stroke-dashoffset: 0; transition: none; } .products .card h3 { letter-spacing: .2em; } }
+
 /* Kategori sekmeleri: sade yazı, altı çizgili */
 .tabs { gap: .4rem 2rem; margin-bottom: 3rem; }
 .tab { border: 0; border-radius: 0; padding: .5rem 0; background: none; position: relative; font-size: .72rem; letter-spacing: .22em; }
@@ -592,8 +611,8 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 560px) {
   .products { gap: 1.8rem .9rem; }
   .products .card { flex-basis: calc(50% - .45rem); }
-  .products .card .card-body { padding: 2.6rem .8rem .8rem; }
-  .products .card h3 { font-size: .92rem; }
+  .products .card h3 { font-size: .58rem; bottom: calc(4% - .3rem); }
+  .products .card.in h3 { letter-spacing: .12em; }
   .products .card .card-cat { font-size: .52rem; letter-spacing: .2em; margin-bottom: .25rem; }
   .tab { padding: .5rem 0; font-size: .66rem; }
   .tabs { gap: 1.4rem; }
