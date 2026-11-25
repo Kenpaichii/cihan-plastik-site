@@ -22,6 +22,8 @@ window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 document.getElementById("yil").textContent = new Date().getFullYear();
+const ys = document.getElementById("yil-sayisi");
+if (ys) ys.textContent = new Date().getFullYear() - 2006;
 
 // Ürün kategorileri
 const tabs = document.querySelectorAll(".tab");
