@@ -130,33 +130,32 @@ if (heroImg && !reduce) {
     $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
   }
 
+  // Açılış tarzı: "a" yan panel, "b" odak, "c" alt sayfa
+  let tarz = "b";
+  try { tarz = localStorage.getItem("detayTarz") || tarz; } catch (e) {}
+  window.setDetayTarz = (v) => { tarz = v; try { localStorage.setItem("detayTarz", v); } catch (e) {} };
+
   function ac(id, card) {
     if (busy || !window.URUNLER[id]) return;
     doldur(id); kart = card;
+    dlg.dataset.v = tarz;
+    dlg.classList.remove("show");
     dlg.showModal(); document.body.classList.add("modal-open");
-    if (reduceMotion || !dlg.animate) return;
-    // Sade açılış: pencere tıklanan kartın tarafından çok hafif kayarak belirir,
-    // fotoğraf soldan sağa perde gibi açılır, yazılar sırayla gelir.
-    let dx = 0;
-    if (card) {
-      const a = card.getBoundingClientRect(), b = dlg.getBoundingClientRect();
-      dx = Math.max(-24, Math.min(24, ((a.left + a.width / 2) - (b.left + b.width / 2)) * 0.05));
-    }
-    dlg.animate([{ opacity: 0, transform: `translate(${dx}px, 10px)` }, { opacity: 1, transform: "none" }],
-      { duration: 700, easing: "cubic-bezier(.22,1,.36,1)" });
-    dlg.querySelector(".detail-img").animate(
-      [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
-      { duration: 1100, delay: 120, easing: "cubic-bezier(.65,0,.35,1)", fill: "backwards" });
+    if (tarz === "b") document.body.classList.add("recede");
+    void dlg.offsetWidth;
+    requestAnimationFrame(() => {
+      dlg.classList.add("show");
+      if (tarz === "b") document.body.classList.add("receded");
+    });
   }
 
   function kapat() {
     if (busy) return;
-    if (reduceMotion || !dlg.animate) { dlg.close(); return; }
+    if (reduceMotion) { dlg.close(); return; }
     busy = true;
-    dlg.classList.add("closing");
-    const an = dlg.animate([{ opacity: 1 }, { opacity: 0, transform: "translateY(6px)" }],
-      { duration: 380, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
-    an.onfinish = () => { dlg.classList.remove("closing"); dlg.close(); an.cancel(); busy = false; };
+    dlg.classList.remove("show");
+    document.body.classList.remove("receded");
+    setTimeout(() => { dlg.close(); document.body.classList.remove("recede"); busy = false; }, 620);
   }
 
   dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });
