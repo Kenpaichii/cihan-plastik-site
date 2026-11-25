@@ -75,10 +75,13 @@ if (heroImg && !reduce) {
     const n = w < 600 ? 22 : 45;
     motes = Array.from({ length: n }, () => ({
       x: rand(0, w), y: rand(0, h), r: rand(.4, 1.6), vy: rand(-.12, -.03), vx: rand(-.05, .05),
-      o: rand(.15, .55), t: rand(0, 6)
+      o: rand(.15, .55), t: rand(0, 6), z: 0
     }));
+    for (const m of motes) m.z = .15 + (m.r - .4) / 1.2 * .55; // büyük zerre = yakın = kaydırınca daha hızlı
   }
+  let lastY = window.scrollY;
   function frame(t) {
+    const dy = window.scrollY - lastY; lastY = window.scrollY;
     ctx.clearRect(0, 0, w, h);
     for (const g of glows) {
       const x = g.x + Math.cos(t * g.s + g.a) * w * .18;
@@ -89,8 +92,9 @@ if (heroImg && !reduce) {
       ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
     }
     for (const m of motes) {
-      m.x += m.vx; m.y += m.vy;
+      m.x += m.vx; m.y += m.vy - dy * m.z;
       if (m.y < -5) { m.y = h + 5; m.x = rand(0, w); }
+      if (m.y > h + 5) { m.y = -5; m.x = rand(0, w); }
       if (m.x < -5) m.x = w + 5; if (m.x > w + 5) m.x = -5;
       const tw = .6 + .4 * Math.sin(t * .001 + m.t);
       ctx.fillStyle = `rgba(255,222,180,${m.o * tw})`;
