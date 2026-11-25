@@ -226,3 +226,30 @@ if (heroImg && !reduce) {
   window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
   upd();
 })();
+
+// Tüm bölümler: kaydırırken içerik aşağıdan yumuşakça gelir, yukarıdan çıkarken hafifçe solar (iki yönde de)
+(() => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const els = [...document.querySelectorAll(".section > *, .footer > *")];
+  els.forEach((el) => { el.style.transition = "opacity .45s ease-out, transform .6s cubic-bezier(.22,1,.36,1)"; el.style.willChange = "opacity, transform"; });
+  const sm = (x) => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
+  let tick = false;
+  const upd = () => {
+    const vh = window.innerHeight;
+    const sonda = window.scrollY + vh >= document.documentElement.scrollHeight - 4;   // sayfanın sonu: kalanların hepsi görünür
+    for (const el of els) {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -vh || r.top > vh * 2) continue;
+      const giris = sonda ? 1 : sm((vh - r.top) / (vh * .3));      // alttan girerken 0→1
+      const cikis = sm(r.bottom / (vh * .3));          // üstten çıkarken 1→0
+      const v = Math.min(giris, cikis);
+      const dir = giris < cikis ? 1 : -1;               // aşağıdan mı geliyor, yukarıdan mı çıkıyor
+      el.style.opacity = (.08 + .92 * v).toFixed(3);
+      el.style.transform = v >= .999 ? "none" : `translate3d(0, ${(dir * (1 - v) * 48).toFixed(1)}px, 0)`;
+    }
+    tick = false;
+  };
+  window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
+  window.addEventListener("resize", upd);
+  upd();
+})();
