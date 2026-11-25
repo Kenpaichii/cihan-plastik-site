@@ -558,6 +558,31 @@ body.modal-open { overflow: hidden; }
 .products .card:hover .card-img img { filter: none; }
 .products .card .card-img img { transition: transform 1.4s cubic-bezier(.22,1,.36,1), filter .8s ease; }
 
+/* İsimler: sıcak şampanya tonu, ince altın çizgi, hover'da yavaş ışıltı, kaydırınca beliriş */
+.products .card h3 {
+  position: relative; padding-top: .75rem; font-weight: 500; letter-spacing: .02em;
+  background: linear-gradient(100deg, #e5cb9f 0%, #e5cb9f 42%, #fff4e2 50%, #e5cb9f 58%, #e5cb9f 100%);
+  background-size: 260% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  text-shadow: none; filter: drop-shadow(0 1px 8px rgba(0,0,0,.45));
+  opacity: 0; transform: translateY(10px); letter-spacing: .09em;
+  transition: opacity 1s ease .35s, transform 1.1s cubic-bezier(.22,1,.36,1) .35s, letter-spacing 1.4s cubic-bezier(.22,1,.36,1) .35s;
+}
+.products .card h3::before {
+  content: ""; position: absolute; left: 0; top: 0; width: 0; height: 1px; background: var(--gold); opacity: .8;
+  transition: width 1s cubic-bezier(.22,1,.36,1) .55s;
+}
+.products .card.in h3 { opacity: 1; transform: none; letter-spacing: .02em; }
+.products .card.in h3::before { width: 22px; }
+.products .card:hover h3::before { width: 46px; transition-delay: 0s; }
+.products .card:hover h3 { animation: isimIsilti 1.8s ease forwards; }
+@keyframes isimIsilti { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .products .card h3 { opacity: 1; transform: none; letter-spacing: .02em; transition: none; }
+  .products .card h3::before { width: 22px; }
+  .products .card:hover h3 { animation: none; }
+}
+
 /* Kategori sekmeleri: sade yazı, altı çizgili */
 .tabs { gap: .4rem 2rem; margin-bottom: 3rem; }
 .tab { border: 0; border-radius: 0; padding: .5rem 0; background: none; position: relative; font-size: .72rem; letter-spacing: .22em; }
