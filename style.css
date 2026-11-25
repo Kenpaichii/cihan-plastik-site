@@ -497,3 +497,50 @@ body.modal-open { overflow: hidden; }
 .stats strong { display: block; font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 600; line-height: 1.1; }
 .stats span { display: block; margin-top: .35rem; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
 @media (max-width: 560px) { .stats { grid-template-columns: 1fr 1fr; } .stats div:last-child { grid-column: 1 / -1; } }
+
+/* ===== Sade vitrin düzeni: fotoğraf üstte, isim altında, kart üzerinde buton yok ===== */
+.products { gap: 2.4rem 1.6rem; }
+.products .card { flex-basis: calc((100% - 4.8rem) / 4); }
+.products .card {
+  aspect-ratio: auto; background: none; border: 0; border-radius: 0; overflow: visible;
+  display: flex; flex-direction: column;
+}
+.products .card::after, .products .card .shine, .products .card .expand, .products .card .card-actions { display: none; }
+.products .card:hover { transform: none; box-shadow: none; }
+.products .card .card-img {
+  position: relative; inset: auto; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden;
+  background: var(--bg-2); box-shadow: 0 20px 40px rgba(0,0,0,.35);
+}
+.products .card .card-img::after { content: ""; position: absolute; inset: 0; border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); transition: box-shadow .6s ease; pointer-events: none; }
+.products .card:hover .card-img::after { box-shadow: inset 0 0 0 1px var(--line); }
+.products .card .card-img img { transition: transform 1.4s cubic-bezier(.22,1,.36,1); }
+.products .card:hover .card-img img { transform: scale(1.04); }
+.products .card .card-body { position: static; inset: auto; padding: 1.1rem .15rem 0; display: block; }
+.products .card h3 { font-size: 1.15rem; font-weight: 500; padding-right: 0; display: inline; position: relative; }
+.products .card h3 small {
+  display: block; margin-top: .45rem; font-size: .66rem; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: var(--muted);
+}
+.products .card h3::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 0; background: var(--gold);
+  transition: width .6s cubic-bezier(.22,1,.36,1); }
+.products .card:hover h3::after { width: 100%; }
+.products .card h3 small { position: absolute; top: 100%; left: 0; white-space: nowrap; }
+.products .card .card-body { min-height: 3.6rem; }
+
+/* Kategori sekmeleri: sade yazı, altı çizgili */
+.tabs { gap: .4rem 2rem; margin-bottom: 3rem; }
+.tab { border: 0; border-radius: 0; padding: .5rem 0; background: none; position: relative; font-size: .72rem; letter-spacing: .22em; }
+.tab::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: 0; height: 1px; background: var(--gold); transition: left .5s cubic-bezier(.22,1,.36,1), right .5s cubic-bezier(.22,1,.36,1); }
+.tab:hover { border: 0; }
+.tab.active { background: none; color: var(--gold); }
+.tab.active::after { left: 0; right: 0; }
+
+@media (max-width: 560px) {
+  .products { gap: 1.8rem .9rem; }
+  .products .card { flex-basis: calc(50% - .45rem); }
+  .products .card .card-body { padding-top: .8rem; min-height: 3.2rem; }
+  .products .card h3 { font-size: .95rem; }
+  .products .card h3 small { font-size: .58rem; letter-spacing: .2em; }
+  .tab { padding: .5rem 0; font-size: .66rem; }
+  .tabs { gap: 1.4rem; }
+}
