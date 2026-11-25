@@ -550,6 +550,14 @@ body.modal-open { overflow: hidden; }
 .products .card .card-cat::before { display: none; }
 .products .card h3 { font-size: 1.1rem; font-weight: 500; }
 
+/* Göz yormasın: tek renk isim, kategori etiketi yok, fotoğraflar tek tonda */
+.products .card h3 .gold { color: inherit; }
+.products .card .card-cat { display: none; }
+.products .card .card-body { padding-top: 3rem; }
+.products .card .card-img img { filter: saturate(.82) brightness(.9) contrast(1.04) sepia(.12); }
+.products .card:hover .card-img img { filter: none; }
+.products .card .card-img img { transition: transform 1.4s cubic-bezier(.22,1,.36,1), filter .8s ease; }
+
 /* Kategori sekmeleri: sade yazı, altı çizgili */
 .tabs { gap: .4rem 2rem; margin-bottom: 3rem; }
 .tab { border: 0; border-radius: 0; padding: .5rem 0; background: none; position: relative; font-size: .72rem; letter-spacing: .22em; }
