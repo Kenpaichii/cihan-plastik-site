@@ -1,0 +1,106 @@
+// WhatsApp linkleri: data-wa içindeki mesajla wa.me linki oluşturur
+const WA_NUMBER = "905446814261";
+document.querySelectorAll("[data-wa]").forEach((el) => {
+  el.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(el.dataset.wa)}`;
+  el.target = "_blank";
+  el.rel = "noopener";
+});
+
+// Kaydırınca yumuşak belirme
+const io = new IntersectionObserver(
+  (entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }),
+  { threshold: 0.12 }
+);
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+// Üst bar: kaydırınca koyulaşır
+const bar = document.querySelector(".topbar");
+const onScroll = () => bar.classList.toggle("solid", window.scrollY > 40);
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+document.getElementById("yil").textContent = new Date().getFullYear();
+
+// Ürün kategorileri
+const tabs = document.querySelectorAll(".tab");
+const cards = document.querySelectorAll(".card");
+tabs.forEach((t) => t.addEventListener("click", () => {
+  tabs.forEach((x) => x.classList.toggle("active", x === t));
+  const f = t.dataset.filter;
+  cards.forEach((c) => {
+    const show = f === "all" || c.dataset.cat === f;
+    c.classList.toggle("hide", !show);
+    c.classList.remove("pop");
+    if (show) { c.classList.add("in"); void c.offsetWidth; c.classList.add("pop"); }
+  });
+}));
+
+// Kart sırası (sırayla belirme için)
+document.querySelectorAll(".products .card").forEach((c, i) => c.style.setProperty("--i", i % 4));
+
+// Giriş görselinde hafif paralaks
+const heroImg = document.querySelector(".hero-panel img");
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (heroImg && !reduce) {
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      const y = Math.min(window.scrollY, window.innerHeight);
+      heroImg.style.setProperty("--par", (y * 0.12).toFixed(1) + "px");
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
+// Arka plan animasyonu: birkaç büyük, çok yavaş kayan sıcak ışık lekesi ve süzülen toz zerreleri
+(() => {
+  const cv = document.getElementById("ambient");
+  if (!cv || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const ctx = cv.getContext("2d");
+  let w, h, dpr, glows, motes;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  function setup() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    glows = [0, 1, 2].map((i) => ({
+      x: rand(0, w), y: rand(0, h), r: rand(Math.max(w, h) * .35, Math.max(w, h) * .6),
+      a: rand(0, Math.PI * 2), s: rand(.00008, .00016), k: [.07, .05, .04][i]
+    }));
+    const n = w < 600 ? 22 : 45;
+    motes = Array.from({ length: n }, () => ({
+      x: rand(0, w), y: rand(0, h), r: rand(.4, 1.6), vy: rand(-.12, -.03), vx: rand(-.05, .05),
+      o: rand(.15, .55), t: rand(0, 6)
+    }));
+  }
+  function frame(t) {
+    ctx.clearRect(0, 0, w, h);
+    for (const g of glows) {
+      const x = g.x + Math.cos(t * g.s + g.a) * w * .18;
+      const y = g.y + Math.sin(t * g.s * 1.3 + g.a) * h * .14;
+      const grd = ctx.createRadialGradient(x, y, 0, x, y, g.r);
+      grd.addColorStop(0, `rgba(216,170,110,${g.k})`);
+      grd.addColorStop(1, "rgba(216,170,110,0)");
+      ctx.fillStyle = grd; ctx.fillRect(0, 0, w, h);
+    }
+    for (const m of motes) {
+      m.x += m.vx; m.y += m.vy;
+      if (m.y < -5) { m.y = h + 5; m.x = rand(0, w); }
+      if (m.x < -5) m.x = w + 5; if (m.x > w + 5) m.x = -5;
+      const tw = .6 + .4 * Math.sin(t * .001 + m.t);
+      ctx.fillStyle = `rgba(255,222,180,${m.o * tw})`;
+      ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2); ctx.fill();
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  let raf;
+  setup();
+  window.addEventListener("resize", setup);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(frame);
+  });
+  raf = requestAnimationFrame(frame);
+})();
