@@ -478,3 +478,15 @@ body.modal-open { overflow: hidden; }
 .slide-cap-line { width: 28px; height: 1px; background: var(--gold); }
 .slide-cap-txt { transition: opacity .9s ease, transform .9s cubic-bezier(.22,1,.36,1); }
 .slide-cap-txt.out { opacity: 0; transform: translateY(6px); }
+
+/* Alt bilgi iletişim satırı */
+.footer-info { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem 1.6rem;
+  letter-spacing: .04em; font-size: .82rem; margin-top: .4rem; }
+.footer-info a { color: var(--muted); padding: .5rem 0; transition: color .2s; }
+.footer-info a:hover { color: var(--gold); }
+
+/* Telefonda dokunma alanları daha rahat */
+@media (max-width: 560px) {
+  .link-wa { min-height: 40px; display: inline-flex; align-items: center; padding: .5rem .85rem; }
+  dd a { display: inline-block; padding: .5rem 0; }
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cihanplastik.tr/sitemap.xml
