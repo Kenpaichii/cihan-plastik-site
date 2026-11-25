@@ -106,8 +106,6 @@ if (heroImg && !reduce) {
 })();
 
 // ===== Ürün detay penceresi =====
-// Açılışta kartın fotoğrafı bulunduğu yerden pencerenin içindeki yerine akıcı şekilde süzülür,
-// pencerenin zemini ve yazıları ise onun etrafında yavaşça belirir. Kapanışta aynı yoldan geri döner.
 (() => {
   const dlg = document.getElementById("detay");
   if (!dlg || !window.URUNLER) return;
@@ -115,8 +113,6 @@ if (heroImg && !reduce) {
   const etiket = { genislik: "Genişlik", kalinlik: "Kalınlık", boy: "Boy" };
   const texClass = { "beyaz-tavan": "tex-white", "kapi-lambrisi": "tex-door", "crp": "tex-crp" };
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const EASE = "cubic-bezier(.65,0,.35,1)";
-  const SURE = 820;
   let kart = null, busy = false;
 
   function doldur(id) {
@@ -134,57 +130,33 @@ if (heroImg && !reduce) {
     $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
   }
 
-  // Kart görselinin kopyası: pencere içinde ama ekrana sabitlenmiş, kırpılmadan hareket eder
-  function kopya(fromEl, rect, radius) {
-    const c = fromEl.cloneNode(true);
-    c.className = fromEl.className + " fly";
-    Object.assign(c.style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px", borderRadius: radius });
-    dlg.appendChild(c);
-    return c;
-  }
-  const kutu = (r) => ({ left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
-
   function ac(id, card) {
     if (busy || !window.URUNLER[id]) return;
     doldur(id); kart = card;
     dlg.showModal(); document.body.classList.add("modal-open");
-    if (reduceMotion || !dlg.animate || !card) { dlg.classList.remove("morph"); return; }
-    busy = true;
-    dlg.classList.add("morph");
-    const hedef = dlg.querySelector(".detail-img");
-    const kartImg = card.querySelector(".card-img");
-    const a = kartImg.getBoundingClientRect(), b = hedef.getBoundingClientRect();
-    hedef.style.opacity = "0";
-    const fly = kopya(kartImg, a, "14px");
-    kartImg.style.visibility = "hidden";
-    dlg.animate([{ backgroundColor: "rgba(23,20,18,0)", borderColor: "rgba(216,185,140,0)", boxShadow: "0 0 0 rgba(0,0,0,0)" }, {}],
-      { duration: SURE, easing: EASE });
-    fly.animate([{ ...kutu(a), borderRadius: "14px" }, { ...kutu(b), borderRadius: "0px" }], { duration: SURE, easing: EASE, fill: "forwards" })
-      .onfinish = () => { hedef.style.opacity = ""; fly.remove(); kartImg.style.visibility = ""; busy = false; };
+    if (reduceMotion || !dlg.animate) return;
+    // Sade açılış: pencere tıklanan kartın tarafından çok hafif kayarak belirir,
+    // fotoğraf soldan sağa perde gibi açılır, yazılar sırayla gelir.
+    let dx = 0;
+    if (card) {
+      const a = card.getBoundingClientRect(), b = dlg.getBoundingClientRect();
+      dx = Math.max(-24, Math.min(24, ((a.left + a.width / 2) - (b.left + b.width / 2)) * 0.05));
+    }
+    dlg.animate([{ opacity: 0, transform: `translate(${dx}px, 10px)` }, { opacity: 1, transform: "none" }],
+      { duration: 700, easing: "cubic-bezier(.22,1,.36,1)" });
+    dlg.querySelector(".detail-img").animate(
+      [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
+      { duration: 1100, delay: 120, easing: "cubic-bezier(.65,0,.35,1)", fill: "backwards" });
   }
 
   function kapat() {
     if (busy) return;
-    if (reduceMotion || !dlg.animate || !kart || !dlg.classList.contains("morph")) { dlg.close(); return; }
+    if (reduceMotion || !dlg.animate) { dlg.close(); return; }
     busy = true;
     dlg.classList.add("closing");
-    const hedef = dlg.querySelector(".detail-img");
-    const kartImg = kart.querySelector(".card-img");
-    const a = hedef.getBoundingClientRect(), b = kartImg.getBoundingClientRect();
-    const fly = kopya(hedef, a, "0px");
-    hedef.style.opacity = "0"; kartImg.style.visibility = "hidden";
-    dlg.animate([{}, { backgroundColor: "rgba(23,20,18,0)", borderColor: "rgba(216,185,140,0)", boxShadow: "0 0 0 rgba(0,0,0,0)" }],
-      { duration: SURE * .8, easing: EASE, fill: "forwards" });
-    dlg.querySelector(".detail-body").animate([{ opacity: 1 }, { opacity: 0, transform: "translateY(8px)" }], { duration: 300, easing: "ease", fill: "forwards" });
-    dlg.querySelector(".detail-close").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" });
-    fly.animate([{ ...kutu(a), borderRadius: "0px" }, { ...kutu(b), borderRadius: "14px" }], { duration: SURE, easing: EASE, fill: "forwards" })
-      .onfinish = () => {
-        kartImg.style.visibility = ""; fly.remove(); hedef.style.opacity = "";
-        dlg.classList.remove("closing");
-        dlg.close();
-        dlg.getAnimations({ subtree: true }).forEach((x) => x.cancel());
-        busy = false;
-      };
+    const an = dlg.animate([{ opacity: 1 }, { opacity: 0, transform: "translateY(6px)" }],
+      { duration: 380, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+    an.onfinish = () => { dlg.classList.remove("closing"); dlg.close(); an.cancel(); busy = false; };
   }
 
   dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });
