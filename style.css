@@ -581,7 +581,7 @@ body.modal-open { overflow: hidden; }
   .products .card:hover h3 { animation: none; }
 }
 
-/* Kemer çerçeve: logodaki kemerli kapıdan; isim alt çizginin boşluğunda */
+/* Çerçeve: kartın etrafını çiziyor; isim alt çizginin boşluğunda */
 .products .card .arch {
   position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 4 / 5; height: auto; z-index: 2; pointer-events: none;
   fill: none; stroke: rgba(216,185,140,.7); stroke-width: 1; stroke-dasharray: 100; stroke-dashoffset: 100;
