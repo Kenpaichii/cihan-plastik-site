@@ -130,10 +130,9 @@ if (heroImg && !reduce) {
     $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
   }
 
-  // Açılış tarzı: "a" yan panel, "b" odak, "c" alt sayfa
-  let tarz = "b";
-  try { tarz = localStorage.getItem("detayTarz") || tarz; } catch (e) {}
-  window.setDetayTarz = (v) => { tarz = v; try { localStorage.setItem("detayTarz", v); } catch (e) {} };
+  // Açılış tarzı: "a" yan panel (şu an kullanılan), "b" odak, "c" alt sayfa.
+  // Değiştirmek için sadece bu satırı düzenlemek yeterli.
+  const tarz = "a";
 
   function ac(id, card) {
     if (busy || !window.URUNLER[id]) return;
