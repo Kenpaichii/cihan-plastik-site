@@ -106,16 +106,21 @@ if (heroImg && !reduce) {
 })();
 
 // ===== Ürün detay penceresi =====
+// Açılışta kartın fotoğrafı bulunduğu yerden pencerenin içindeki yerine akıcı şekilde süzülür,
+// pencerenin zemini ve yazıları ise onun etrafında yavaşça belirir. Kapanışta aynı yoldan geri döner.
 (() => {
   const dlg = document.getElementById("detay");
   if (!dlg || !window.URUNLER) return;
   const $ = (id) => document.getElementById(id);
   const etiket = { genislik: "Genişlik", kalinlik: "Kalınlık", boy: "Boy" };
   const texClass = { "beyaz-tavan": "tex-white", "kapi-lambrisi": "tex-door", "crp": "tex-crp" };
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const EASE = "cubic-bezier(.65,0,.35,1)";
+  const SURE = 820;
+  let kart = null, busy = false;
 
-  let kaynak = null, kartEl = null;
-  function ac(id) {
-    const u = window.URUNLER[id]; if (!u) return;
+  function doldur(id) {
+    const u = window.URUNLER[id];
     const img = dlg.querySelector(".detail-img");
     img.className = "detail-img"; img.innerHTML = "";
     if (u.gorsel) img.innerHTML = `<img src="${u.gorsel}" alt="${u.ad}">`;
@@ -127,44 +132,69 @@ if (heroImg && !reduce) {
       .filter(([, v]) => v).map(([k, v]) => `<div><dt>${etiket[k] || k}</dt><dd>${v}</dd></div>`).join("");
     $("detay-ozel").innerHTML = [...(u.ozellikler || []), ...(u.renkler || [])].map((x) => `<li>${x}</li>`).join("");
     $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
+  }
+
+  // Kart görselinin kopyası: pencere içinde ama ekrana sabitlenmiş, kırpılmadan hareket eder
+  function kopya(fromEl, rect, radius) {
+    const c = fromEl.cloneNode(true);
+    c.className = fromEl.className + " fly";
+    Object.assign(c.style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px", borderRadius: radius });
+    dlg.appendChild(c);
+    return c;
+  }
+  const kutu = (r) => ({ left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+
+  function ac(id, card) {
+    if (busy || !window.URUNLER[id]) return;
+    doldur(id); kart = card;
     dlg.showModal(); document.body.classList.add("modal-open");
-    kaynak = kartEl || null;
-    if (kaynak && !reduceMotion && dlg.animate) {
-      dlg.classList.add("flip");
-      dlg.animate(flipFrames(kaynak), { duration: 900, easing: "cubic-bezier(.25,.8,.25,1)" });
-    } else dlg.classList.remove("flip");
+    if (reduceMotion || !dlg.animate || !card) { dlg.classList.remove("morph"); return; }
+    busy = true;
+    dlg.classList.add("morph");
+    const hedef = dlg.querySelector(".detail-img");
+    const kartImg = card.querySelector(".card-img");
+    const a = kartImg.getBoundingClientRect(), b = hedef.getBoundingClientRect();
+    hedef.style.opacity = "0";
+    const fly = kopya(kartImg, a, "14px");
+    kartImg.style.visibility = "hidden";
+    dlg.animate([{ backgroundColor: "rgba(23,20,18,0)", borderColor: "rgba(216,185,140,0)", boxShadow: "0 0 0 rgba(0,0,0,0)" }, {}],
+      { duration: SURE, easing: EASE });
+    fly.animate([{ ...kutu(a), borderRadius: "14px" }, { ...kutu(b), borderRadius: "0px" }], { duration: SURE, easing: EASE, fill: "forwards" })
+      .onfinish = () => { hedef.style.opacity = ""; fly.remove(); kartImg.style.visibility = ""; busy = false; };
   }
-  // Pencereyi tıklanan kartın yerinden büyüterek açar (ve oraya geri küçültür)
-  function flipFrames(el) {
-    const a = el.getBoundingClientRect(), b = dlg.getBoundingClientRect();
-    const dx = (a.left + a.width / 2) - (b.left + b.width / 2);
-    const dy = (a.top + a.height / 2) - (b.top + b.height / 2);
-    const sx = a.width / b.width, sy = a.height / b.height;
-    return [
-      { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.2, borderRadius: "14px" },
-      { opacity: 1, offset: 0.45 },
-      { transform: "none", opacity: 1, borderRadius: "18px" }
-    ];
-  }
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const kapat = () => {
-    if (reduceMotion || dlg.classList.contains("closing")) { dlg.close(); return; }
+
+  function kapat() {
+    if (busy) return;
+    if (reduceMotion || !dlg.animate || !kart || !dlg.classList.contains("morph")) { dlg.close(); return; }
+    busy = true;
     dlg.classList.add("closing");
-    if (kaynak && dlg.classList.contains("flip")) {
-      const anim = dlg.animate(flipFrames(kaynak).reverse(), { duration: 550, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" });
-      anim.onfinish = () => { dlg.classList.remove("closing"); dlg.close(); anim.cancel(); };
-      return;
-    }
-    setTimeout(() => { dlg.classList.remove("closing"); dlg.close(); }, 450);
-  };
+    const hedef = dlg.querySelector(".detail-img");
+    const kartImg = kart.querySelector(".card-img");
+    const a = hedef.getBoundingClientRect(), b = kartImg.getBoundingClientRect();
+    const fly = kopya(hedef, a, "0px");
+    hedef.style.opacity = "0"; kartImg.style.visibility = "hidden";
+    dlg.animate([{}, { backgroundColor: "rgba(23,20,18,0)", borderColor: "rgba(216,185,140,0)", boxShadow: "0 0 0 rgba(0,0,0,0)" }],
+      { duration: SURE * .8, easing: EASE, fill: "forwards" });
+    dlg.querySelector(".detail-body").animate([{ opacity: 1 }, { opacity: 0, transform: "translateY(8px)" }], { duration: 300, easing: "ease", fill: "forwards" });
+    dlg.querySelector(".detail-close").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" });
+    fly.animate([{ ...kutu(a), borderRadius: "0px" }, { ...kutu(b), borderRadius: "14px" }], { duration: SURE, easing: EASE, fill: "forwards" })
+      .onfinish = () => {
+        kartImg.style.visibility = ""; fly.remove(); hedef.style.opacity = "";
+        dlg.classList.remove("closing");
+        dlg.close();
+        dlg.getAnimations({ subtree: true }).forEach((x) => x.cancel());
+        busy = false;
+      };
+  }
+
   dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });
   dlg.addEventListener("close", () => document.body.classList.remove("modal-open"));
   dlg.querySelector(".detail-close").addEventListener("click", kapat);
   dlg.addEventListener("click", (e) => { if (e.target === dlg) kapat(); });
 
   document.querySelectorAll(".card[data-id]").forEach((card) => {
-    card.addEventListener("click", (e) => { if (e.target.closest(".link-wa")) return; kartEl = card; ac(card.dataset.id); });
-    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); kartEl = card; ac(card.dataset.id); } });
+    card.addEventListener("click", (e) => { if (e.target.closest(".link-wa")) return; ac(card.dataset.id, card); });
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ac(card.dataset.id, card); } });
   });
 })();
 
