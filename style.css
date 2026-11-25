@@ -294,7 +294,7 @@ h1 .intro { display: block; }
 .hero-panel { opacity: 0; transform: translateX(40px) scale(.97);
   animation: panelIn 1.4s cubic-bezier(.2,.7,.2,1) .35s forwards; }
 @keyframes panelIn { to { opacity: 1; transform: none; } }
-.hero-panel img { transform: translateY(var(--par, 0px)) scale(1.08); will-change: transform; }
+.hero-panel .slides { position: absolute; inset: 0; transform: translateY(var(--par, 0px)) scale(1.08); will-change: transform; }
 .sweep { position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background: linear-gradient(105deg, transparent 35%, rgba(255,226,180,.28) 50%, transparent 65%);
   transform: translateX(-120%); transition: transform 0s; }
@@ -347,7 +347,8 @@ h1 .intro { display: block; }
   .intro, .hero-panel, .shimmer { animation: none !important; opacity: 1; transform: none; filter: none; }
   .shimmer { color: var(--gold); background: none; }
   .sweep, .beams, .dust, .wa-float::after { animation: none !important; display: none; }
-  .hero-panel img { transform: none; }
+  .hero-panel .slides { transform: none; }
+  .slide { transition: none !important; animation: none !important; }
   .shine { display: none; }
 }
 
@@ -357,14 +358,14 @@ h1 .intro { display: block; }
 
 /* Giriş fotoğrafı: üzerine gelince yavaşça büyür, çevresinde ince altın çerçeve kendini çizer */
 .hero-panel { transition: box-shadow 1.2s ease; }
-.hero-panel img { transition: transform 2.4s cubic-bezier(.22,.61,.36,1); }
-.hero-panel:hover img { transform: translateY(var(--par, 0px)) scale(1.14); }
+.hero-panel .slides { transition: transform 2.4s cubic-bezier(.22,.61,.36,1); }
+.hero-panel:hover .slides { transform: translateY(var(--par, 0px)) scale(1.14); }
 .hero-panel:hover { box-shadow: 0 40px 90px rgba(0,0,0,.6), 0 0 60px rgba(216,185,140,.12); }
 .frame { position: absolute; inset: 14px; width: calc(100% - 28px); height: calc(100% - 28px); z-index: 2; pointer-events: none; overflow: visible; }
 .frame rect { fill: none; stroke: var(--gold); stroke-width: 1; opacity: .85;
   stroke-dasharray: 100 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1), opacity 1s; }
 .hero-panel:hover .frame rect { stroke-dashoffset: 0; }
-@media (prefers-reduced-motion: reduce) { .hero-panel:hover img { transform: none; } .frame rect { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-panel:hover .slides { transform: none; } .frame rect { transition: none; } }
 
 /* ===== Ürün detay penceresi ===== */
 .products .card { cursor: pointer; }
@@ -464,4 +465,14 @@ body.modal-open { overflow: hidden; }
   .detail-img { min-height: 0; aspect-ratio: 4 / 3; }
   .specs { grid-template-columns: repeat(3, 1fr); }
 }
-@media (prefers-reduced-motion: reduce) { .detail[open], .detail::backdrop, .detail.closing, .detail[open] .detail-img img, 
+@media (prefers-reduced-motion: reduce) { .detail, .detail::backdrop, .detail .detail-body > *, .detail .detail-img img, body.recede > * { transition: none !important; } }
+/* Giriş görseli: ürünler arasında yavaş geçiş */
+.hero-panel .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 2.2s cubic-bezier(.4,0,.2,1); }
+.hero-panel .slide.on { opacity: 1; animation: kenburns 9s ease-out both; }
+@keyframes kenburns { from { transform: scale(1.06); } to { transform: scale(1); } }
+.slide-cap { position: absolute; left: 1.6rem; bottom: 1.4rem; z-index: 2; display: flex; align-items: center; gap: .8rem;
+  font-size: .72rem; letter-spacing: .32em; text-transform: uppercase; color: var(--text); }
+.slide-cap-line { width: 28px; height: 1px; background: var(--gold); }
+.slide-cap-txt { transition: opacity .9s ease, transform .9s cubic-bezier(.22,1,.36,1); }
+.slide-cap-txt.out { opacity: 0; transform: translateY(6px); }

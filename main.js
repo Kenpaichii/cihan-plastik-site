@@ -41,7 +41,7 @@ tabs.forEach((t) => t.addEventListener("click", () => {
 document.querySelectorAll(".products .card").forEach((c, i) => c.style.setProperty("--i", i % 4));
 
 // Giriş görselinde hafif paralaks
-const heroImg = document.querySelector(".hero-panel img");
+const heroImg = document.querySelector(".hero-panel .slides");
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (heroImg && !reduce) {
   let ticking = false;
@@ -179,4 +179,23 @@ if (heroImg && !reduce) {
       <figcaption>${u.urun ? `<span>${u.urun}</span>` : ""}<strong>${u.baslik || ""}</strong>${u.yer ? `<small> · ${u.yer}</small>` : ""}</figcaption>
     </figure>`).join("");
   sec.hidden = false;
+})();
+
+// Giriş görseli: birkaç saniyede bir sıradaki ürüne yumuşak geçiş
+(() => {
+  const slides = [...document.querySelectorAll(".hero-panel .slide")];
+  const cap = document.querySelector(".slide-cap-txt");
+  if (slides.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let i = 0;
+  setInterval(() => {
+    if (document.hidden) return;
+    const next = (i + 1) % slides.length;
+    slides[next].classList.add("on");
+    slides[i].classList.remove("on");
+    i = next;
+    if (cap) {
+      cap.classList.add("out");
+      setTimeout(() => { cap.textContent = slides[i].dataset.ad; cap.classList.remove("out"); }, 900);
+    }
+  }, 6500);
 })();
