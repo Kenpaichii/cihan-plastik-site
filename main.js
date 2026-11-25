@@ -145,7 +145,7 @@ if (heroImg && !reduce) {
     doldur(id); kart = card;
     dlg.dataset.v = tarz;
     dlg.classList.remove("show");
-    dlg.showModal(); document.body.classList.add("modal-open");
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); document.body.classList.add("modal-open");
     if (tarz === "b") document.body.classList.add("recede");
     void dlg.offsetWidth;
     requestAnimationFrame(() => {
@@ -156,11 +156,11 @@ if (heroImg && !reduce) {
 
   function kapat() {
     if (busy) return;
-    if (reduceMotion) { dlg.close(); return; }
+    if (reduceMotion) { (dlg.close ? dlg.close() : dlg.removeAttribute("open")); return; }
     busy = true;
     dlg.classList.remove("show");
     document.body.classList.remove("receded");
-    setTimeout(() => { dlg.close(); document.body.classList.remove("recede"); busy = false; }, 620);
+    setTimeout(() => { (dlg.close ? dlg.close() : dlg.removeAttribute("open")); document.body.classList.remove("recede"); busy = false; }, 620);
   }
 
   dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });
