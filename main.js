@@ -104,3 +104,50 @@ if (heroImg && !reduce) {
   });
   raf = requestAnimationFrame(frame);
 })();
+
+// ===== Ürün detay penceresi =====
+(() => {
+  const dlg = document.getElementById("detay");
+  if (!dlg || !window.URUNLER) return;
+  const $ = (id) => document.getElementById(id);
+  const etiket = { genislik: "Genişlik", kalinlik: "Kalınlık", boy: "Boy" };
+  const texClass = { "beyaz-tavan": "tex-white", "kapi-lambrisi": "tex-door", "crp": "tex-crp" };
+
+  function ac(id) {
+    const u = window.URUNLER[id]; if (!u) return;
+    const img = dlg.querySelector(".detail-img");
+    img.className = "detail-img"; img.innerHTML = "";
+    if (u.gorsel) img.innerHTML = `<img src="${u.gorsel}" alt="${u.ad}">`;
+    else img.classList.add("tex", texClass[id] || "tex-white");
+    $("detay-kat").textContent = u.kategori || "";
+    $("detay-ad").textContent = u.ad;
+    $("detay-acik").textContent = u.aciklama || "";
+    $("detay-olcu").innerHTML = Object.entries(u.olculer || {})
+      .filter(([, v]) => v).map(([k, v]) => `<div><dt>${etiket[k] || k}</dt><dd>${v}</dd></div>`).join("");
+    $("detay-ozel").innerHTML = [...(u.ozellikler || []), ...(u.renkler || [])].map((x) => `<li>${x}</li>`).join("");
+    $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
+    dlg.showModal(); document.body.classList.add("modal-open");
+  }
+  const kapat = () => dlg.close();
+  dlg.addEventListener("close", () => document.body.classList.remove("modal-open"));
+  dlg.querySelector(".detail-close").addEventListener("click", kapat);
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) kapat(); });
+
+  document.querySelectorAll(".card[data-id]").forEach((card) => {
+    card.addEventListener("click", (e) => { if (e.target.closest(".link-wa")) return; ac(card.dataset.id); });
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ac(card.dataset.id); } });
+  });
+})();
+
+// ===== Uygulama örnekleri (liste doluysa bölüm görünür) =====
+(() => {
+  const list = window.UYGULAMALAR || [];
+  const sec = document.getElementById("uygulamalar");
+  if (!sec || !list.length) return;
+  sec.querySelector(".app-grid").innerHTML = list.map((u) => `
+    <figure class="app-item reveal in">
+      <img src="${u.gorsel}" alt="${u.baslik || u.urun || "Uygulama örneği"}" loading="lazy">
+      <figcaption>${u.urun ? `<span>${u.urun}</span>` : ""}<strong>${u.baslik || ""}</strong>${u.yer ? `<small> · ${u.yer}</small>` : ""}</figcaption>
+    </figure>`).join("");
+  sec.hidden = false;
+})();
