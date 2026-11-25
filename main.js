@@ -128,7 +128,13 @@ if (heroImg && !reduce) {
     $("detay-wa").href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Merhaba, ${u.ad} için fiyat bilgisi alabilir miyim?`)}`;
     dlg.showModal(); document.body.classList.add("modal-open");
   }
-  const kapat = () => dlg.close();
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const kapat = () => {
+    if (reduceMotion || dlg.classList.contains("closing")) { dlg.close(); return; }
+    dlg.classList.add("closing");
+    setTimeout(() => { dlg.classList.remove("closing"); dlg.close(); }, 450);
+  };
+  dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });
   dlg.addEventListener("close", () => document.body.classList.remove("modal-open"));
   dlg.querySelector(".detail-close").addEventListener("click", kapat);
   dlg.addEventListener("click", (e) => { if (e.target === dlg) kapat(); });
