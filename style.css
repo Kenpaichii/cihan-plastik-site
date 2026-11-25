@@ -570,16 +570,14 @@ body.modal-open { overflow: hidden; }
 }
 .products .card h3::before {
   content: ""; position: absolute; left: 0; top: 0; width: 0; height: 1px; background: var(--gold); opacity: .8;
-  transition: width 1s cubic-bezier(.22,1,.36,1) .55s;
+  transition: width .7s cubic-bezier(.22,1,.36,1);
 }
 .products .card.in h3 { opacity: 1; transform: none; letter-spacing: .02em; }
-.products .card.in h3::before { width: 22px; }
-.products .card:hover h3::before { width: 46px; transition-delay: 0s; }
+.products .card:hover h3::before { width: 40px; }
 .products .card:hover h3 { animation: isimIsilti 1.8s ease forwards; }
 @keyframes isimIsilti { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @media (prefers-reduced-motion: reduce) {
   .products .card h3 { opacity: 1; transform: none; letter-spacing: .02em; transition: none; }
-  .products .card h3::before { width: 22px; }
   .products .card:hover h3 { animation: none; }
 }
 
