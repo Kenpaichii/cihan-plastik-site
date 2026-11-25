@@ -187,15 +187,20 @@ if (heroImg && !reduce) {
   const cap = document.querySelector(".slide-cap-txt");
   if (slides.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   let i = 0;
+  // Görselleri önceden çöz, geçiş anında takılma olmasın
+  slides.forEach((s) => s.decode && s.decode().catch(() => {}));
   setInterval(() => {
     if (document.hidden) return;
-    const next = (i + 1) % slides.length;
-    slides[next].classList.add("on");
-    slides[i].classList.remove("on");
-    i = next;
+    const prev = slides[i];
+    i = (i + 1) % slides.length;
+    const cur = slides[i];
+    cur.classList.remove("off");
+    prev.classList.replace("on", "off");   // giden fotoğrafın yakınlaşması yarıda kesilmez
+    cur.classList.add("on");
+    setTimeout(() => prev.classList.remove("off"), 2400);
     if (cap) {
       cap.classList.add("out");
-      setTimeout(() => { cap.textContent = slides[i].dataset.ad; cap.classList.remove("out"); }, 900);
+      setTimeout(() => { cap.textContent = cur.dataset.ad; cap.classList.remove("out"); }, 900);
     }
   }, 6500);
 })();

@@ -468,9 +468,11 @@ body.modal-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .detail, .detail::backdrop, .detail .detail-body > *, .detail .detail-img img, body.recede > * { transition: none !important; } }
 /* Giriş görseli: ürünler arasında yavaş geçiş */
 .hero-panel .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; transition: opacity 2.2s cubic-bezier(.4,0,.2,1); }
-.hero-panel .slide.on { opacity: 1; animation: kenburns 9s ease-out both; }
-@keyframes kenburns { from { transform: scale(1.06); } to { transform: scale(1); } }
+  opacity: 0; transition: opacity 2.2s cubic-bezier(.45,0,.55,1); will-change: opacity, transform; }
+.hero-panel .slide.on { opacity: 1; }
+/* Yakınlaşma, geçiş boyunca hem giden hem gelen fotoğrafta kesintisiz sürer */
+.hero-panel .slide.on, .hero-panel .slide.off { animation: kenburns 10s linear both; }
+@keyframes kenburns { from { transform: scale(1.07); } to { transform: scale(1); } }
 .slide-cap { position: absolute; left: 1.6rem; bottom: 1.4rem; z-index: 2; display: flex; align-items: center; gap: .8rem;
   font-size: .72rem; letter-spacing: .32em; text-transform: uppercase; color: var(--text); }
 .slide-cap-line { width: 28px; height: 1px; background: var(--gold); }
