@@ -517,15 +517,26 @@ body.modal-open { overflow: hidden; }
 .products .card .card-img img { transition: transform 1.4s cubic-bezier(.22,1,.36,1); }
 .products .card:hover .card-img img { transform: scale(1.04); }
 .products .card .card-body { position: static; inset: auto; padding: 1.1rem .15rem 0; display: block; }
-.products .card h3 { font-size: 1.15rem; font-weight: 500; padding-right: 0; display: inline; position: relative; }
-.products .card h3 small {
-  display: block; margin-top: .45rem; font-size: .66rem; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: var(--muted);
+.products .card.hide { display: none; }
+.products .card .card-body {
+  display: grid; grid-template-columns: 1fr auto; align-items: end; column-gap: 1rem;
+  padding: 1.2rem .1rem 1rem; border-bottom: 1px solid rgba(255,255,255,.07); transition: border-color .6s ease;
 }
-.products .card h3::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 0; background: var(--gold);
-  transition: width .6s cubic-bezier(.22,1,.36,1); }
-.products .card:hover h3::after { width: 100%; }
-.products .card h3 small { position: absolute; top: 100%; left: 0; white-space: nowrap; }
-.products .card .card-body { min-height: 3.6rem; }
+.products .card:hover .card-body { border-color: var(--line); }
+.products .card .card-cat {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: .7rem; margin-bottom: .55rem;
+  font-size: .62rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); opacity: .85;
+}
+.products .card .card-cat::before { content: ""; width: 18px; height: 1px; background: var(--gold); opacity: .7; transition: width .6s cubic-bezier(.22,1,.36,1); }
+.products .card:hover .card-cat::before { width: 30px; }
+.products .card h3 { font-size: 1.3rem; font-weight: 600; letter-spacing: -.005em; line-height: 1.2; padding: 0; }
+.products .card .card-go {
+  width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(216,185,140,.35); display: grid; place-items: center;
+  color: var(--gold); transition: background .5s ease, color .5s ease, border-color .5s ease;
+}
+.products .card .card-go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .5s cubic-bezier(.22,1,.36,1); }
+.products .card:hover .card-go { background: var(--gold); border-color: var(--gold); color: #1a1410; }
+.products .card:hover .card-go svg { transform: translateX(2px); }
 
 /* Kategori sekmeleri: sade yazı, altı çizgili */
 .tabs { gap: .4rem 2rem; margin-bottom: 3rem; }
@@ -538,9 +549,12 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 560px) {
   .products { gap: 1.8rem .9rem; }
   .products .card { flex-basis: calc(50% - .45rem); }
-  .products .card .card-body { padding-top: .8rem; min-height: 3.2rem; }
-  .products .card h3 { font-size: .95rem; }
-  .products .card h3 small { font-size: .58rem; letter-spacing: .2em; }
+  .products .card .card-body { padding: .9rem 0 .8rem; column-gap: .5rem; }
+  .products .card h3 { font-size: 1rem; }
+  .products .card .card-cat { font-size: .54rem; letter-spacing: .22em; gap: .45rem; margin-bottom: .4rem; }
+  .products .card .card-cat::before { width: 12px; }
+  .products .card .card-go { width: 30px; height: 30px; }
+  .products .card .card-go svg { width: 13px; height: 13px; }
   .tab { padding: .5rem 0; font-size: .66rem; }
   .tabs { gap: 1.4rem; }
 }
