@@ -617,3 +617,34 @@ body.modal-open { overflow: hidden; }
   .tab { padding: .5rem 0; font-size: .66rem; }
   .tabs { gap: 1.4rem; }
 }
+
+/* ===== Açılış ekranı (telefon, oturumda bir kez) ===== */
+#splash { display: none; }
+html.splash, html.splash body { overflow: hidden; }
+html.splash .hero, html.splash .hero * { animation-play-state: paused !important; }
+html.splash #splash, #splash.out { display: flex; }
+#splash {
+  position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;
+  background: radial-gradient(90% 60% at 50% 42%, #221c17 0%, #0f0d0c 70%);
+  transition: opacity .9s ease, visibility .9s;
+}
+#splash.out { opacity: 0; visibility: hidden; pointer-events: none; }
+#splash.out .sp-in { transform: scale(1.04); filter: blur(4px); }
+.sp-in { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; color: var(--gold);
+  transition: transform .9s cubic-bezier(.22,1,.36,1), filter .9s ease; }
+.sp-mark { width: 96px; height: auto; overflow: visible; }
+.sp-mark path[pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: spDraw 1.1s cubic-bezier(.65,0,.35,1) forwards; }
+.sp-mark path[pathLength]:nth-child(1) { animation-delay: .25s; }
+.sp-mark path[pathLength]:nth-child(2) { animation-delay: .1s; }
+.sp-mark path[pathLength]:nth-child(3) { animation-delay: .25s; }
+.sp-door { opacity: 0; transform: translateY(3px); transform-box: fill-box; animation: spFade .7s ease .95s forwards; }
+.sp-row { display: flex; align-items: center; gap: .9rem; }
+.sp-line { display: block; height: 1px; width: 0; background: linear-gradient(90deg, transparent, var(--gold)); animation: spLine .9s cubic-bezier(.22,1,.36,1) 1.05s forwards; }
+.sp-line:last-child { background: linear-gradient(90deg, var(--gold), transparent); }
+.sp-name { color: var(--text); font-size: .8rem; font-weight: 400; letter-spacing: .75em; margin-right: -.45em; opacity: 0;
+  animation: spName 1.2s cubic-bezier(.22,1,.36,1) .8s forwards; white-space: nowrap; }
+.sp-tag { font-size: .78rem; letter-spacing: .08em; color: var(--gold); opacity: 0; animation: spFade .9s ease 1.45s forwards; }
+@keyframes spDraw { to { stroke-dashoffset: 0; } }
+@keyframes spFade { to { opacity: 1; transform: none; } }
+@keyframes spLine { to { width: 34px; } }
+@keyframes spName { to { opacity: 1; letter-spacing: .45em; } }

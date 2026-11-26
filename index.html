@@ -47,8 +47,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>
+/* Telefonda ilk açılışta logo ekranı (oturum başına bir kez) */
+(function(){try{var m=matchMedia("(max-width: 760px)").matches,r=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(m&&!r&&!sessionStorage.getItem("cp_acilis")){document.documentElement.classList.add("splash");
+setTimeout(function(){document.documentElement.classList.remove("splash")},5000);}}catch(e){}})();
+</script>
 </head>
 <body>
+<div id="splash" aria-hidden="true">
+  <div class="sp-in">
+    <svg class="sp-mark" viewBox="0 0 100 50"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="miter"><path pathLength="1" d="M3 47 L22 22 L31 34"/><path pathLength="1" d="M19 47 L50 8 L81 47"/><path pathLength="1" d="M69 34 L78 22 L97 47"/></g><path class="sp-door" fill="currentColor" d="M44 47 V38 a6 6 0 0 1 12 0 V47 Z"/></svg>
+    <div class="sp-row"><span class="sp-line"></span><span class="sp-name">CİHAN PLASTİK</span><span class="sp-line"></span></div>
+    <p class="sp-tag">Doğallığın yeni formu.</p>
+  </div>
+</div>
 <canvas id="ambient" aria-hidden="true"></canvas>
 
 <header class="topbar">

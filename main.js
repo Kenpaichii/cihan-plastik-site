@@ -1,3 +1,19 @@
+// Açılış ekranı: logo çizilir, isim belirir, sonra yumuşakça kaybolur (dokununca hemen geçer)
+(() => {
+  const root = document.documentElement, sp = document.getElementById("splash");
+  if (!sp || !root.classList.contains("splash")) return;
+  try { sessionStorage.setItem("cp_acilis", "1"); } catch (e) {}
+  let bitti = false;
+  const bitir = () => {
+    if (bitti) return; bitti = true;
+    sp.classList.add("out");
+    setTimeout(() => root.classList.remove("splash"), 250);
+    setTimeout(() => sp.remove(), 1100);
+  };
+  setTimeout(bitir, 2900);
+  sp.addEventListener("click", bitir);
+})();
+
 // WhatsApp linkleri: data-wa içindeki mesajla wa.me linki oluşturur
 const WA_NUMBER = "905446814261";
 document.querySelectorAll("[data-wa]").forEach((el) => {
