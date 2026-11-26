@@ -120,11 +120,17 @@ if (heroImg && !reduce) {
   }
   let raf;
   setup();
-  window.addEventListener("resize", setup);
+  // Telefonda adres çubuğu açılıp kapanınca boyut değişir; zerreleri yeniden dağıtma, sadece tuvali ayarla
+  let lastW = window.innerWidth;
+  window.addEventListener("resize", () => {
+    if (window.innerWidth !== lastW) { lastW = window.innerWidth; setup(); return; }
+    w = cv.clientWidth; h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(frame);
   });
   raf = requestAnimationFrame(frame);
+  requestAnimationFrame(() => requestAnimationFrame(() => cv.classList.add("on")));
 })();
 
 // ===== Ürün detay penceresi =====

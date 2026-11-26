@@ -353,7 +353,8 @@ h1 .intro { display: block; }
 }
 
 /* Sayfa boyu arka plan: yavaş süzülen sıcak ışıklar ve toz */
-#ambient { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+#ambient { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.6s ease; }
+#ambient.on { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { #ambient { display: none; } }
 
 /* Giriş fotoğrafı: üzerine gelince yavaşça büyür, çevresinde ince altın çerçeve kendini çizer */
