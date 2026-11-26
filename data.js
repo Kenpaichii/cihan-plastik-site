@@ -15,7 +15,7 @@ window.URUNLER = {
     ozellikler: []
   },
   "antik-mese": {
-    ad: "Antik Meşe Lambri",
+    ad: "Royal Lambri",
     kategori: "Lambri",
     gorsel: "img/antik-mese.webp",
     aciklama: "Açık, eskitilmiş meşe dokusuyla doğal ve aydınlık bir görünüm.",
