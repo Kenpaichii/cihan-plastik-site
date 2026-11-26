@@ -220,7 +220,7 @@ dt { font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; color: v
 dd { color: var(--muted); margin-top: .3rem; }
 dd a:hover { color: var(--gold); }
 .map { border-radius: var(--radius); overflow: hidden; height: 440px; border: 1px solid rgba(255,255,255,.06); }
-.map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(.6) invert(.9) hue-rotate(180deg) contrast(.9); }
+.map iframe { width: 100%; height: 100%; border: 0; color-scheme: normal; background: #e5e3df; filter: grayscale(.6) invert(.9) hue-rotate(180deg) contrast(.9); }
 
 /* Alt bilgi */
 .footer {
