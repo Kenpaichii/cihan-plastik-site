@@ -648,3 +648,6 @@ html.splash #splash, #splash.out { display: flex; }
 @keyframes spFade { to { opacity: 1; transform: none; } }
 @keyframes spLine { to { width: 34px; } }
 @keyframes spName { to { opacity: 1; letter-spacing: .45em; } }
+
+.phones .who { font-size: .72rem; letter-spacing: .08em; color: var(--muted); margin-left: .5rem; }
+.phones a { line-height: 1.7; }
