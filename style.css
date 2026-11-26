@@ -654,6 +654,6 @@ html.splash #splash, #splash.out { display: flex; }
 .phones .who { font-size: .72rem; letter-spacing: .08em; color: var(--muted); margin-left: .5rem; }
 .phones a { line-height: 1.7; }
 
-/* Panel kapandıktan sonra bakılan ürüne yumuşak altın halka */
-.products .card .card-img { transition: box-shadow .9s ease; }
+/* Panel açıkken bakılan ürüne altın halka (açarken gelir, kapatırken gider) */
+.products .card .card-img { transition: box-shadow .5s ease; }
 .products .card.son .card-img { box-shadow: 0 0 0 1.5px rgba(216,185,140,.85), 0 0 34px rgba(216,185,140,.22), 0 20px 40px rgba(0,0,0,.35); }

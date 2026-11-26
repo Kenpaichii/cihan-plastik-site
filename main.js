@@ -165,6 +165,7 @@ if (heroImg && !reduce) {
   function ac(id, card) {
     if (busy || !window.URUNLER[id]) return;
     doldur(id); kart = card;
+    card.classList.add("son");   // açarken altın halka gelir
     dlg.dataset.v = tarz;
     dlg.classList.remove("show");
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); document.body.classList.add("modal-open");
@@ -181,24 +182,20 @@ if (heroImg && !reduce) {
   let klavye = false;
   window.addEventListener("keydown", () => { klavye = true; }, true);
   window.addEventListener("pointerdown", () => { klavye = false; }, true);
-  function vurgula() {
-    if (!kart) return;
-    const k = kart;
-    if (!klavye && document.activeElement === k) k.blur();
-    k.classList.add("son");
-    clearTimeout(k._sonT);
-    k._sonT = setTimeout(() => k.classList.remove("son"), 2600);
+  function odakTemizle() {
+    if (kart && !klavye && document.activeElement === kart) kart.blur();
   }
 
   function kapat() {
     if (busy) return;
-    if (reduceMotion) { (dlg.close ? dlg.close() : dlg.removeAttribute("open")); return; }
+    if (reduceMotion) { if (kart) kart.classList.remove("son"); (dlg.close ? dlg.close() : dlg.removeAttribute("open")); odakTemizle(); return; }
     busy = true;
+    if (kart) kart.classList.remove("son");   // kapatırken hemen gider
     dlg.classList.remove("show");
     document.body.classList.remove("receded");
     setTimeout(() => {
       (dlg.close ? dlg.close() : dlg.removeAttribute("open")); document.body.classList.remove("recede"); busy = false;
-      vurgula();
+      odakTemizle();
     }, 620);
   }
 
