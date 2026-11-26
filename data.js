@@ -35,7 +35,7 @@ window.URUNLER = {
   "beyaz-tavan": {
     ad: "Beyaz Tavan Lambri",
     kategori: "Tavan Lambrisi",
-    gorsel: "",
+    gorsel: "img/beyaz-tavan.webp",
     aciklama: "Temiz, beyaz yüzeyli tavan lambrisi.",
     olculer: { genislik: "", kalinlik: "", boy: "" },
     renkler: [],
