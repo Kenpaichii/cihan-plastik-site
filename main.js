@@ -176,13 +176,30 @@ if (heroImg && !reduce) {
     });
   }
 
+  // Panel kapanınca bakılan ürünü yumuşak bir altın halkayla kısa süre işaretle.
+  // Tarayıcının ani odak çerçevesini (fare/dokunmada) kaldır; klavyede kalsın.
+  let klavye = false;
+  window.addEventListener("keydown", () => { klavye = true; }, true);
+  window.addEventListener("pointerdown", () => { klavye = false; }, true);
+  function vurgula() {
+    if (!kart) return;
+    const k = kart;
+    if (!klavye && document.activeElement === k) k.blur();
+    k.classList.add("son");
+    clearTimeout(k._sonT);
+    k._sonT = setTimeout(() => k.classList.remove("son"), 2600);
+  }
+
   function kapat() {
     if (busy) return;
     if (reduceMotion) { (dlg.close ? dlg.close() : dlg.removeAttribute("open")); return; }
     busy = true;
     dlg.classList.remove("show");
     document.body.classList.remove("receded");
-    setTimeout(() => { (dlg.close ? dlg.close() : dlg.removeAttribute("open")); document.body.classList.remove("recede"); busy = false; }, 620);
+    setTimeout(() => {
+      (dlg.close ? dlg.close() : dlg.removeAttribute("open")); document.body.classList.remove("recede"); busy = false;
+      vurgula();
+    }, 620);
   }
 
   dlg.addEventListener("cancel", (e) => { e.preventDefault(); kapat(); });

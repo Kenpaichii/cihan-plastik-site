@@ -370,7 +370,8 @@ h1 .intro { display: block; }
 
 /* ===== Ürün detay penceresi ===== */
 .products .card { cursor: pointer; }
-.products .card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.products .card { outline: 2px solid transparent; outline-offset: 6px; transition: outline-color .6s ease, outline-offset .6s cubic-bezier(.22,1,.36,1); }
+.products .card:focus-visible { outline-color: rgba(216,185,140,.8); outline-offset: 4px; }
 .card-actions { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
 .expand {
   position: absolute; top: 1.1rem; right: 1.1rem; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
@@ -652,3 +653,7 @@ html.splash #splash, #splash.out { display: flex; }
 
 .phones .who { font-size: .72rem; letter-spacing: .08em; color: var(--muted); margin-left: .5rem; }
 .phones a { line-height: 1.7; }
+
+/* Panel kapandıktan sonra bakılan ürüne yumuşak altın halka */
+.products .card .card-img { transition: box-shadow .9s ease; }
+.products .card.son .card-img { box-shadow: 0 0 0 1.5px rgba(216,185,140,.85), 0 0 34px rgba(216,185,140,.22), 0 20px 40px rgba(0,0,0,.35); }
