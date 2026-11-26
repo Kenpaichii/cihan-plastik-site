@@ -276,8 +276,8 @@ if (heroImg && !reduce) {
     for (const el of els) {
       const r = el.getBoundingClientRect();
       if (r.bottom < -vh || r.top > vh * 2) continue;
-      const giris = sonda ? 1 : sm((vh - r.top) / (vh * .3));      // alttan girerken 0→1
-      const cikis = sm(r.bottom / (vh * .3));          // üstten çıkarken 1→0
+      const giris = sonda ? 1 : sm((vh - r.top) / (vh * .18));      // alttan girerken 0→1
+      const cikis = sm(r.bottom / (vh * .18));          // üstten çıkarken 1→0
       const v = Math.min(giris, cikis);
       const dir = giris < cikis ? 1 : -1;               // aşağıdan mı geliyor, yukarıdan mı çıkıyor
       el.style.opacity = (.08 + .92 * v).toFixed(3);
