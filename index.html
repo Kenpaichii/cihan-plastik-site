@@ -51,9 +51,9 @@
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>
-/* Telefonda ilk açılışta logo ekranı (oturum başına bir kez) */
-(function(){try{var m=matchMedia("(max-width: 760px)").matches,r=matchMedia("(prefers-reduced-motion: reduce)").matches;
-if(m&&!r&&!sessionStorage.getItem("cp_acilis")){document.documentElement.classList.add("splash");
+/* İlk açılışta logo ekranı: telefon ve bilgisayar (oturum başına bir kez) */
+(function(){try{var r=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!r&&!sessionStorage.getItem("cp_acilis")){document.documentElement.classList.add("splash");
 setTimeout(function(){document.documentElement.classList.remove("splash")},5000);}}catch(e){}})();
 </script>
 </head>

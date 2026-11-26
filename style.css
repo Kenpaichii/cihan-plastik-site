@@ -657,3 +657,11 @@ html.splash #splash, #splash.out { display: flex; }
 /* Panel açıkken bakılan ürüne altın halka (açarken gelir, kapatırken gider) */
 .products .card .card-img { transition: box-shadow .5s ease; }
 .products .card.son .card-img { box-shadow: 0 0 0 1.5px rgba(216,185,140,.85), 0 0 34px rgba(216,185,140,.22), 0 20px 40px rgba(0,0,0,.35); }
+
+@media (min-width: 761px) {
+  .sp-mark { width: 130px; }
+  .sp-name { font-size: 1rem; }
+  .sp-tag { font-size: .9rem; }
+  .sp-in { gap: 1.4rem; }
+  @keyframes spLine { to { width: 56px; } }
+}
