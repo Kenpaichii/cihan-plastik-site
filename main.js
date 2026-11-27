@@ -33,7 +33,18 @@ document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
 // Üst bar: kaydırınca koyulaşır
 const bar = document.querySelector(".topbar");
-const onScroll = () => bar.classList.toggle("solid", window.scrollY > 40);
+let barRaf = 0;
+const onScroll = () => {
+  if (barRaf) return;
+  barRaf = requestAnimationFrame(() => {
+    barRaf = 0;
+    // İlk 220px boyunca kademeli koyulaşma (yumuşak eğri)
+    const t = Math.min(1, Math.max(0, window.scrollY / 220));
+    const e = t * t * (3 - 2 * t);
+    bar.style.setProperty("--bar", e.toFixed(3));
+    bar.classList.toggle("solid", t > .5);
+  });
+};
 window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
