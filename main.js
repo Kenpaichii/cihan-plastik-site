@@ -268,6 +268,13 @@ if (heroImg && !reduce) {
     const e = k * k * (3 - 2 * k);
     ht.style.transform = k ? `translate3d(0, ${(-e * 70).toFixed(1)}px, 0)` : "";
     ht.style.opacity = k ? (1 - e * .95).toFixed(3) : "";
+    // Üst barın altına giren kısım yumuşakça kaybolsun (yazı logonun arkasında görünmesin)
+    const hb = bar.getBoundingClientRect().bottom;
+    const off = hb - ht.getBoundingClientRect().top;
+    if (off > -80) {
+      const m = `linear-gradient(to bottom, transparent ${Math.max(0, off).toFixed(0)}px, #000 ${(Math.max(0, off) + 80).toFixed(0)}px)`;
+      ht.style.webkitMaskImage = m; ht.style.maskImage = m;
+    } else if (ht.style.maskImage) { ht.style.webkitMaskImage = ""; ht.style.maskImage = ""; }
     tick = false;
   };
   window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
